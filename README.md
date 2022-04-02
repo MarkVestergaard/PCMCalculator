@@ -19,7 +19,7 @@ Vestergaard et al.  Journal of Cerebral Blood Flow & Metabolism 2019, Vol. 39(5)
 
  Mark B. Vestergaard <n>  
  Functional Imaging Unit, <n>  
- Department of Clinical Physiology and Nuclearmedicine <n>  
+ Department of Clinical Physiology and Nuclear Medicine <n>  
  Rigshospitalet <n> 
  Copenhagen, Denmark <n>  
  mark.bitsch.vestergaard@regionh.dk
