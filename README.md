@@ -1,6 +1,7 @@
 # PCMCalculator
 Script for analyzing 2D phase contrast mapping (PCM) MRI data to measure trough-plane flow. 
 
+Written for python 3.8. 
 Tested on PCM data from 3T Philips dSTREAM Achieva MRI and 3T Siemens Biograph mMR hybrid PET/MR system . 
 
 
