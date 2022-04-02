@@ -13,7 +13,7 @@ Data saved as csv file.
   
   
 For in-depth description of analysis see: <n> 
-Vestergaard et al. Cerebral Cortex, Volume 32, Issue 6, 15 March 2022, Pages 1295–1306, doi:https://doi.org/10.1093/cercor/bhab294 <n> or <n>
+Vestergaard et al. Cerebral Cortex, Volume 32, Issue 6, 15 March 2022, 1295–1306, doi:https://doi.org/10.1093/cercor/bhab294 <n> or <n>
 Vestergaard et al.  Journal of Cerebral Blood Flow & Metabolism 2019, Vol. 39(5) 834–848, doi:https://doi.org/10.1177/0271678X17737909
 
 
