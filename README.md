@@ -24,5 +24,5 @@ Vestergaard et al.  Journal of Cerebral Blood Flow & Metabolism 2019, Vol. 39(5)
  Copenhagen, Denmark <n>  
  mark.bitsch.vestergaard@regionh.dk
  
-  
-<img width="1145" alt="PCM_GUI" src="https://user-images.githubusercontent.com/102877223/161402216-82d88518-34b2-4c71-9246-752147649079.png">
+
+<img width="1554" height="985" alt="PCMCalculator" src="https://github.com/user-attachments/assets/3b7aac6a-69c5-423c-af3f-320fd987d1de" />
