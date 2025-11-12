@@ -18,29 +18,30 @@ Department of Clinical Physiology and Nuclear Medicine
 Rigshospitalet Copenhagen, Denmark
 mark.bitsch.vestergaard@regionh.dk
 
-@author: Mark B. Vestegaard, August 2025, mark.bitsch.vestergaard@regionh.dk 
+@author: Mark B. Vestegaard, June 2021, mark.bitsch.vestergaard@regionh.dk 
 """
 
 from tkinter import *
 from tkinter import filedialog
 import matplotlib.pyplot as plt
-from matplotlib.backends.backend_tkagg import (
-    FigureCanvasTkAgg, NavigationToolbar2Tk)
+from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
 import nibabel as nib
 import argparse
 import numpy as np
 import numpy.matlib
-import pandas as pd 
+import pandas as pd
+#from functools import partial    
 from matplotlib.widgets import PolygonSelector
 from matplotlib.patches import Polygon 
 from matplotlib.path import Path
 from skimage import measure
+#import csv
 import os 
 import scipy
 from functools import partial
 from PIL import Image 
 import glob
-
+from skimage.morphology import binary_dilation, disk
 
 # parser for loading PAR/REC file
 parser = argparse.ArgumentParser(description='Calculate flow in vessel')
@@ -100,13 +101,12 @@ class Img_data_parrec():
             self.Venc=max(self.img.header.general_info.get('phase_enc_velocity')) # Find venc in header
             self.Venc_from_hdr=True
         else:
-            self.Venc=100
+            self.Venc=15
             self.Venc_from_hdr=False
 
         self.thres_image_idx=np.logical_and(self.img.header.image_defs['image_type_mr']==0,self.img.header.image_defs['scanning sequence']==4)
         self.mod_image_idx=np.logical_and(self.img.header.image_defs['image_type_mr']==0,self.img.header.image_defs['scanning sequence']==2)
         self.phase_image_idx=np.logical_and(self.img.header.image_defs['image_type_mr']==3,self.img.header.image_defs['scanning sequence']==4)
-
 
         self.img.header.image_defs['recon resolution']
         self.img.dataobj_sq=np.squeeze(self.img.dataobj)
@@ -129,6 +129,7 @@ class Img_data_parrec():
             self.Thres_image=(np.rot90(self.img.dataobj_sq[:,:,self.thres_image_idx])/self.img.dataobj_sq[:,:,self.thres_image_idx].max()*self.Venc*0.7)
             self.Mod_image=(np.rot90(self.img.dataobj_sq[:,:,self.mod_image_idx])/self.img.dataobj_sq[:,:,self.mod_image_idx].max()*self.Venc*0.9)
             self.Vel_image=np.rot90(self.img.dataobj_sq[:,:,self.phase_image_idx])
+
 
     def set_new_data(self): #(self=Img_data): # Set new data
          
@@ -204,7 +205,6 @@ class Img_data_nii():
         self.img_c.json_header = json.load(fname_json_tmp)     
         ImageType_c=self.img_c.json_header['ImageType'][2]
         
-        
         self.ImageType=[ImageType_a, ImageType_b, ImageType_c]
         self.Inv_image_indx=1
         file_type = os.path.splitext(raw_img_filename[0])[1]
@@ -212,7 +212,7 @@ class Img_data_nii():
             self.Venc=self.img.header.general_info.get('phase_enc_velocity')[2] # Find venc in header
             self.Venc_from_hdr=True
         else:
-            self.Venc=100
+            self.Venc=15
             self.Venc_from_hdr=False
             
         
@@ -239,95 +239,110 @@ class Img_data_nii():
             self.Vel_image=((np.rot90(np.squeeze(self.nifti_file_b.dataobj), k=-1 ))/4096)*self.Venc
         elif n_tmp==2:
             self.Vel_image=((np.rot90(np.squeeze(self.nifti_file_c.dataobj), k=-1 ))/4096)*self.Venc
-        
+
+
     
     
     def set_new_data(self): #(self=Img_data): # Set new data
         raw_img_filename = filedialog.askopenfilename(initialdir = "/",title = "Select file",filetypes = (("NIFTI","*.nii"),("all files","*.*")),multiple=True)       
-        self.raw_img = nib.load(raw_img_filename[0])# Loads PCM par file nibabel load
+        self.raw_img = nib.load(raw_img_filename[0])
         self.raw_img_filename=raw_img_filename[0]
-        self.img = nib.as_closest_canonical(self.raw_img) # Loads PCM par file
+        self.img = nib.as_closest_canonical(self.raw_img)
         self.nifti_file = nib.Nifti1Image(self.img.dataobj, self.img.affine, header=self.img.header)
         fname_json_tmp = open(os.path.splitext(raw_img_filename[0])[0]+'.json')
         self.img.json_header = json.load(fname_json_tmp)     
         ImageType_a=self.img.json_header['ImageType'][2]
 
-        
-        self.raw_img_b = nib.load(raw_img_filename[1])# Loads PCM par file nibabel load
+        self.raw_img_b = nib.load(raw_img_filename[1])
         self.raw_img_filename_b=raw_img_filename[1]
-        self.img_b = nib.as_closest_canonical(self.raw_img_b) # Loads PCM par file
+        self.img_b = nib.as_closest_canonical(self.raw_img_b)
         self.nifti_file_b = nib.Nifti1Image(self.img_b.dataobj, self.img_b.affine, header=self.img_b.header)
         fname_json_tmp = open(os.path.splitext(raw_img_filename[1])[0]+'.json')
         self.img_b.json_header = json.load(fname_json_tmp)     
         ImageType_b=self.img_b.json_header['ImageType'][2]
-        
-        self.raw_img_c = nib.load(raw_img_filename[2])# Loads PCM par file nibabel load
+    
+        self.raw_img_c = nib.load(raw_img_filename[2])
         self.raw_img_filename_c=raw_img_filename[2]
-        self.img_c = nib.as_closest_canonical(self.raw_img_c) # Loads PCM par file
+        self.img_c = nib.as_closest_canonical(self.raw_img_c)
         self.nifti_file_c = nib.Nifti1Image(self.img_c.dataobj, self.img_c.affine, header=self.img_c.header)
         fname_json_tmp = open(os.path.splitext(raw_img_filename[2])[0]+'.json')
         self.img_c.json_header = json.load(fname_json_tmp)     
         ImageType_c=self.img_c.json_header['ImageType'][2]
-        ImageType=[ImageType_a, ImageType_b, ImageType_c]
-        
+        self.ImageType=[ImageType_a, ImageType_b, ImageType_c]
+    
+        self.Inv_image_indx=1
+
+    
         file_type = os.path.splitext(raw_img_filename[0])[1]
         if file_type=='.PAR':
-            self.Venc=self.img.header.general_info.get('phase_enc_velocity')[2] # Find venc in header
+            self.Venc=self.img.header.general_info.get('phase_enc_velocity')[2]
             self.Venc_from_hdr=True
         else:
-            self.Venc=100
+            self.Venc=15
             self.Venc_from_hdr=False
-            
-        
-           
-        n_tmp=ImageType.index('M')
+    
+        n_tmp=self.ImageType.index('M')
         if n_tmp==0:
             self.Mod_image=np.rot90(np.squeeze(self.nifti_file.dataobj/self.nifti_file.dataobj.max())*self.Venc*0.7, k=-1) 
         elif n_tmp==1:
             self.Mod_image=np.rot90(np.squeeze(self.nifti_file_b.dataobj/self.nifti_file_b.dataobj.max())*self.Venc*0.7, k=-1) 
         elif n_tmp==2:
             self.Mod_image=np.rot90(np.squeeze(self.nifti_file_c.dataobj/self.nifti_file_c.dataobj.max())*self.Venc*0.7,k=-1)   
-            
-        n_tmp=ImageType.index('MAG')
+        
+        n_tmp=self.ImageType.index('MAG')
         if n_tmp==0:
             self.Thres_image=np.rot90(np.squeeze(self.nifti_file.dataobj/self.nifti_file.dataobj.max())*self.Venc*0.9 ,k=-1) 
         elif n_tmp==1:
             self.Thres_image=np.rot90(np.squeeze(self.nifti_file_b.dataobj/self.nifti_file_b.dataobj.max())*self.Venc*0.9 ,k=-1)
         elif n_tmp==2:
             self.Thres_image=np.rot90(np.squeeze(self.nifti_file_c.dataobj/self.nifti_file_c.dataobj.max())*self.Venc*0.9 ,k=-1)
-            
-        n_tmp=ImageType.index('P')
+        
+        n_tmp=self.ImageType.index('P')
         if n_tmp==0:
             self.Vel_image=((np.rot90(np.squeeze(self.nifti_file.dataobj), k=-1 ))/4096)*self.Venc
         elif n_tmp==1:
             self.Vel_image=((np.rot90(np.squeeze(self.nifti_file_b.dataobj), k=-1 ))/4096)*self.Venc
         elif n_tmp==2:
             self.Vel_image=((np.rot90(np.squeeze(self.nifti_file_c.dataobj), k=-1 ))/4096)*self.Venc
-
+    
         global nifti_files
         nifti_files=True
-        
+    
         global Disp_image_str
         global colormap_str
         global imgFrame
         imgFrame=1
         slider_scale.set(1)
         slider_scale['to'] = 1
-        slider_scale['from'] = Img_data.Vel_image.shape[2]
-        #slider_scale.ax.set_xlim(slider_scale.valmin,slider_scale.valmax)
-        change_image(Disp_image_str,colormap_str)
-        
-        save_str=[Img_data.raw_img_filename[0:-4]+'_Flow_data.csv']
+        slider_scale['from'] = self.Vel_image.shape[2]
+    
+        save_str=[self.raw_img_filename[0:-4]+'_Flow_data.csv']
         entry_save_filename.delete(0, 'end')
         entry_save_filename.insert(END, save_str[0])
+    
+    # Reset ROIs if shape changes
+        if ROI_art.BWMask.shape != self.Vel_image.shape:
+            ROI_art.polygon=[None]*self.Vel_image.shape[2]
+            ROI_art.BWMask=self.Vel_image*False
+            ROI_art.flag=[0]*(self.Vel_image.shape[2])
+    
+    # Calculate mean velocity image (this was missing!)
+        self.Mean_vel_image_tmp=np.mean(self.Vel_image[:,:,0:3],2)
+        self.Mean_vel_image=np.repeat(self.Mean_vel_image_tmp[:,:,np.newaxis], self.Vel_image.shape[2], axis=2)
+    
         change_image(Disp_image_str,colormap_str)
 
 
 if not nifti_files:
-    Img_data=Img_data_parrec(raw_img_filename)        
+    Img_data=Img_data_parrec(raw_img_filename)  
+    Img_data.Mean_vel_image_tmp=np.mean(Img_data.Vel_image[:,:,0:3],2)
+    Img_data.Mean_vel_image=np.repeat( Img_data.Mean_vel_image_tmp[:,:,np.newaxis],Img_data.Vel_image.shape[2], axis=2)    
 
 if nifti_files:
     Img_data=Img_data_nii(raw_img_filename_tmp)  
+    Img_data.Mean_vel_image_tmp=np.mean(Img_data.Vel_image[:,:,0:3],2)
+    Img_data.Mean_vel_image=np.repeat(Img_data.Mean_vel_image_tmp[:,:,np.newaxis],Img_data.Vel_image.shape[2], axis=2)
+    
 
 
 
@@ -342,6 +357,9 @@ def displayed_image(disp_name): # Returns Disp_image variable with shown data
         return Img_data.Thres_image
     elif disp_name == 'ROI':
         return ROI_art.BWMask*100
+    elif disp_name == 'Mean_vel':
+        return Img_data.Mean_vel_image
+        
     
 Disp_image=displayed_image(Disp_image_str)
 
@@ -365,6 +383,11 @@ def change_image_type_str_thres(self=''):
 def change_image_type_str_ROI(self=''):
     global Disp_image_str
     Disp_image_str='ROI'
+    change_image(Disp_image_str,colormap_str)
+
+def change_image_type_str_Mean_vel_map(self=''):
+    global Disp_image_str
+    Disp_image_str='Mean_vel'
     change_image(Disp_image_str,colormap_str)
 
 
@@ -401,13 +424,13 @@ def popup_change_colorbar():
     Min_entry_text.grid(row=1,rowspan=1,column=0,columnspan=1,sticky='n',pady=10,padx=0)
     Min_entry = Entry(popup_change_colorbar,width=7)
     Min_entry.grid(row=1,rowspan=1,column=1,columnspan=1,sticky='nw',pady=10,padx=0)
-    Min_entry.insert(END, '-5')
+    Min_entry.insert(END, '-15')
     
     Max_entry_text = Label(popup_change_colorbar, text="Max:",width = 7,padx=0)
     Max_entry_text.grid(row=0,rowspan=1,column=0,columnspan=1,sticky='n',pady=0,padx=0)
     Max_entry = Entry(popup_change_colorbar,width=7)
     Max_entry.grid(row=0,rowspan=1,column=1,columnspan=1,sticky='nw',pady=0,padx=0)
-    Max_entry.insert(END, '40')
+    Max_entry.insert(END, '15')
     
     def update_colorbar():
         climits.lims=[float(Min_entry.get()),float(Max_entry.get())]
@@ -451,11 +474,13 @@ submenu.add_radiobutton(label="Velocity",accelerator="Control+1",command = chang
 submenu.add_radiobutton(label="Modulus",accelerator="Control+2",command = change_image_type_str_mod)
 submenu.add_radiobutton(label="Threshold" ,command  = change_image_type_str_thres,accelerator="Control+3")
 submenu.add_radiobutton(label="ROI mask" ,command  = change_image_type_str_ROI,accelerator="Control+4")
+submenu.add_radiobutton(label="Mean velocity" ,command  = change_image_type_str_Mean_vel_map,accelerator="Control+5")
 
 window.bind_all('<Control-Key-1>', func=change_image_type_str_vel ) # Binds keyboard shortcut to topbar 
 window.bind_all('<Control-Key-2>', func=change_image_type_str_mod )
 window.bind_all('<Control-Key-3>', func=change_image_type_str_thres )
 window.bind_all('<Control-Key-4>', func=change_image_type_str_ROI )
+window.bind_all('<Control-Key-5>', func=change_image_type_str_Mean_vel_map )
 
 # Colormap topmenu
 subsubmenu = Menu(submenu, tearoff=1)
@@ -479,7 +504,7 @@ fig = plt.figure(figsize=(5.0, 5.0), dpi=100) # Obs change size!
 ax = fig.add_subplot(111)
 
 class climits():
-    lims=[-5,40]
+    lims=[-15,15]
 
 global pcm_plot
 pcm_plot=ax.imshow(Disp_image[:,:,imgFrame-1],cmap=plt.get_cmap(colormap_str),vmin=climits.lims[0],vmax=climits.lims[1], interpolation='none')
@@ -489,7 +514,7 @@ fig.tight_layout() # Tight layout
 
 canvas = FigureCanvasTkAgg(fig, master=window)  # Draws the figure in the tkinter GUI window
 canvas.draw()
-canvas.get_tk_widget().grid(row=1,rowspan=1,column=1,columnspan=1,padx=0,pady=0) # place in grid
+canvas.get_tk_widget().grid(row=1,rowspan=4,column=1,columnspan=1,padx=0,pady=0) # place in grid
 
 # Create line data for plotting ROI data
 ROI_line_plot, = ax.plot([], [], '.w-')
@@ -506,18 +531,19 @@ Flow_line_plot, = ax_flow.plot([], [], '.r-')
 
 canvas_flow = FigureCanvasTkAgg(fig_flow, master=window)  # Draws the figure in the tkinter GUI window
 canvas_flow.draw()
-canvas_flow.get_tk_widget().grid(row=1,rowspan=1,column=5,columnspan=1,padx=20,pady=50) # place in grid
+canvas_flow.get_tk_widget().grid(row=1,rowspan=4,column=5,columnspan=1,padx=20,pady=50) # place in grid
 
 
 # Create frame for the navigation toolbar
 ToolbarFrame = Frame(window)
-ToolbarFrame.grid(row=2, column=1,rowspan=1,columnspan=1,padx=0,pady=0,sticky='nw')
+ToolbarFrame.grid(row=5, column=1,rowspan=1,columnspan=1,padx=0,pady=0,sticky='sw')
 toobar = NavigationToolbar2Tk(canvas, ToolbarFrame)
 
 # Function for changing image
 def change_image(image_str,cmp_str): # Changed displayed image
     Disp_image=displayed_image(image_str)
     global pcm_plot
+
     if pcm_plot.get_array().shape!=Disp_image.shape[0:2]: 
         pcm_plot=ax.imshow(Disp_image[:,:,imgFrame-1],cmap=plt.get_cmap(colormap_str),vmin=climits.lims[0],vmax=climits.lims[1], interpolation='none')
         fig.tight_layout() # Tight layout
@@ -557,7 +583,7 @@ def update_image(self):
 
 # Create slider for changing frame.
 slider_scale = Scale(window, to=1, from_=Img_data.Vel_image.shape[2], width=20,length=400 ,command=update_image)
-slider_scale.grid(row=1,rowspan=1,column=4,columnspan=1,padx=0,pady=0,sticky='w')
+slider_scale.grid(row=1,rowspan=4,column=4,columnspan=1,padx=0,pady=0,sticky='w')
 
 
 def key_arrow_up(self=''):
@@ -587,7 +613,7 @@ window.bind_all('<Down>', func=key_arrow_down )
 
 
 # Add headline text
-headline_text = Label(window, text="Draw ROI to calculate blood flow in the blood vessel")
+headline_text = Label(window, text="Draw ROI to calculate flow")
 headline_text.grid(row=0,rowspan=1,column=0,columnspan=2,sticky='nw')
 
 
@@ -761,11 +787,27 @@ class RegGrow():
     def Calc_Auto_ROI() :
         window.config(cursor='plus green white')
         RegGrow.btm_press_event=fig.canvas.callbacks.connect('button_press_event', RegGrow.create_mask)
+            
 
+    global PS 
+    ROIPolygon(pcm_plot.axes, Img_data.Vel_image.shape[0], Img_data.Vel_image.shape[2])
+    PS.set_visible(False)
+    PS.set_active(False) 
+    ROI_as_array = np.array(ROI_art.polygon[int(imgFrame-1)])
+    #ROI_line_plot.set_ydata(ROI_as_array[:,1])
+    #ROI_line_plot.set_xdata(ROI_as_array[:,0])
+    fig.canvas.draw()
+        
+
+    def Calc_Auto_ROI() :
+        window.config(cursor='plus green white')
+        RegGrow.btm_press_event=fig.canvas.callbacks.connect('button_press_event', RegGrow.create_mask)
+    
+    
 
 # Create buttons for ROI controls 
 ROI_button_group = LabelFrame(window, text='ROI analysis', borderwidth=2,relief='solid')
-ROI_button_group.grid(row=1,rowspan=1,column=0,columnspan=1,sticky='nw',padx=10,pady=20)
+ROI_button_group.grid(row=1,rowspan=1,column=0,columnspan=1,sticky='nw',padx=10,pady=0)
 
 # Add new ROI
 AddROI_button = Button(master = ROI_button_group,
@@ -794,8 +836,8 @@ AutoROI_button = Button(master = ROI_button_group,
                      width = 10,
                     text = "Automatic \n delineation", command=RegGrow.Calc_Auto_ROI)
 AutoROI_button.grid(row=4,rowspan=1,column=0,columnspan=2,sticky='nw',pady=2,padx=10)
-Max_dist_text = Label(ROI_button_group, text="Max. dist:",width = 7,padx=0)
-Max_dist_text.grid(row=5,rowspan=1,column=0,columnspan=1,sticky='n',pady=0,padx=0)
+Max_dist_text = Label(ROI_button_group, text="Max. dist:",padx=0)
+Max_dist_text.grid(row=5,rowspan=1,column=0,columnspan=1,sticky='nw',pady=0,padx=0)
 
 # Entries for region growing algorithm 
 e1 = Entry(ROI_button_group,width=4)
@@ -808,13 +850,82 @@ e2 = Entry(ROI_button_group,width=4)
 e2.grid(row=6,rowspan=1,column=1,columnspan=1,sticky='nw',pady=0,padx=0)
 e2.insert(END, '10')
 
-# Function for calculating flow
-if nifti_files:
-    sort_indx=np.argsort(Img_data.img.header.get_data_shape())
-    vox_size=Img_data.img.header.get_zooms()[sort_indx[-1]]*Img_data.img.header.get_zooms()[sort_indx[-2]]
-else: 
-    vox_size=np.prod( Img_data.img.header.image_defs['pixel spacing'][0:2,0] )
+
+MF_text = Label(ROI_button_group, text="Avg. Vel. Frames:")
+MF_text.grid(row=7,rowspan=1,column=0,columnspan=1,sticky='nw',pady=0,padx=10)
+e3 = Entry(ROI_button_group,width=4)
+e3.grid(row=7,rowspan=1,column=1,columnspan=1,sticky='nw',pady=0,padx=0)
+e3.insert(END, '0,1,2')
+
+
+def clear_all_rois():
+    """Clear all ROIs and reset the analysis"""
+    # Create a confirmation dialog
+    from tkinter import messagebox
+    result = messagebox.askyesno("Clear All ROIs", 
+                                "Are you sure you want to clear all ROIs?")
     
+    if result:
+        # Reset ROI data structures
+        ROI_art.polygon = [None] * Img_data.Vel_image.shape[2]
+        ROI_art.BWMask = Img_data.Vel_image * False
+        ROI_art.flag = [0] * (Img_data.Vel_image.shape[2])
+        
+        # Clear ROI line plot
+        ROI_line_plot.set_ydata([])
+        ROI_line_plot.set_xdata([])
+        
+        # Clear flow plot
+        ax_flow.clear()
+        ax_flow.set_ylabel('Flow [ml/min]', fontsize=8.0)
+        ax_flow.set_xlabel('Index', fontsize=8.0)
+        ax_flow.set_xlim([1, Img_data.Vel_image.shape[2]+1])
+        
+        # Reset flow output data
+        Flow_output.Flows = np.empty((1, Img_data.Vel_image.shape[2],))
+        Flow_output.Flows[:] = np.nan
+        Flow_output.Velocity = np.empty((1, Img_data.Vel_image.shape[2],))
+        Flow_output.Velocity[:] = np.nan
+        Flow_output.CS_area = np.empty((1, Img_data.Vel_image.shape[2],))
+        Flow_output.CS_area[:] = np.nan
+        Flow_output.flow_str = ''
+        
+        # Clear flow text display
+        Flow_text_str.configure(text='')
+        
+        
+        # Deactivate polygon selector if active
+        global PS
+        if PS is not None:
+            PS.set_visible(False)
+            PS.set_active(False)
+            UpdateROI_button.configure(text='Edit ROI')
+        
+        # Refresh display
+        canvas.draw()
+        canvas_flow.draw()
+        
+        # Update the current frame display
+        update_image(imgFrame)
+        
+        print("All ROIs cleared successfully")
+        
+        # Update status message
+        Data_saved_txt.configure(text="All ROIs cleared - ready for new analysis")
+
+       
+
+
+# Clear all ROIs button
+ClearAllROI_button = Button(master=ROI_button_group,
+                           height=2,
+                           width=10,
+                           text="Clear All ROIs",
+                           command=clear_all_rois,
+                           highlightbackground='#ffcccc')  # Light red background to indicate destructive action
+ClearAllROI_button.grid(row=8, rowspan=1, column=0, columnspan=2, sticky='nw', pady=2, padx=10)
+
+
 
 def inverse_vel_image():    
     Img_data.Inv_image_indx=Img_data.Inv_image_indx*-1
@@ -839,17 +950,19 @@ def inverse_vel_image():
               Img_data.Vel_image=np.rot90(Img_data.img.dataobj_sq[:,:,Img_data.phase_image_idx])*Img_data.Inv_image_indx
     
     
+    Img_data.Mean_vel_image=Img_data.Mean_vel_image*-1
     
-    change_image(Disp_image_str,colormap_str)
+    update_image(imgFrame)
 
 
 Inv_image_button_group = LabelFrame(window, borderwidth=2,relief='solid')
-Inv_image_button_group.grid(row=1,rowspan=1,column=5,columnspan=2,sticky='sw',padx=0,pady=0)
+Inv_image_button_group.grid(row=4,rowspan=1,column=5,columnspan=2,sticky='sw',padx=0,pady=0)
 Inv_image_button = Button(master = Inv_image_button_group,
                       height = 2,
                       width = 10,
                       text = "Inv. Vel. image", command=inverse_vel_image)
 Inv_image_button.grid(row=0,rowspan=1,column=0, columnspan=1,sticky='nw',pady=0,padx=0)  
+
 
 
 
@@ -862,6 +975,9 @@ class Flow_output:
     flow_str=''
     CS_area= np.empty((1,Vel_image_tmp.shape[2],))
     CS_area[:] = np.nan
+    
+    
+
     def Calc_flow():
     
         if nifti_files:
@@ -874,34 +990,54 @@ class Flow_output:
                 Img_data.Vel_image=((np.rot90(np.squeeze(Img_data.nifti_file_b.dataobj), k=-1 ))/4096)*Img_data.Venc*Img_data.Inv_image_indx
             elif n_tmp==2:
                 Img_data.Vel_image=((np.rot90(np.squeeze(Img_data.nifti_file_c.dataobj), k=-1 ))/4096)*Img_data.Venc*Img_data.Inv_image_indx
+            
+            
+            MF_indx=[int(x) for x in e3.get().split(',')]
+            Img_data.Mean_vel_image_tmp=np.mean(Img_data.Vel_image[:,:,MF_indx],2)
+            Img_data.Mean_vel_image=np.repeat( Img_data.Mean_vel_image_tmp[:,:,np.newaxis],Img_data.Vel_image.shape[2], axis=2)
+            #Img_data.Vel_image =Img_data.Vel_image
+
             change_image(Disp_image_str,colormap_str)
 
-        
-        Flow_output.Vel_image_tmp=ROI_art.BWMask[:,:,range(0,Img_data.Vel_image.shape[2])]*Img_data.Vel_image
-        Flow_output.Flows=np.empty((1,Flow_output.Vel_image_tmp.shape[2],))
-        Flow_output.Velocity=np.empty((1,Flow_output.Vel_image_tmp.shape[2],))
-        Flow_output.CS_area=np.empty((1,Flow_output.Vel_image_tmp.shape[2],))
-        Flow_output.rx=np.empty((1,Flow_output.Vel_image_tmp.shape[2],))
-        Flow_output.rx_bw=np.empty((1,Flow_output.Vel_image_tmp.shape[2],))
-        for x in range(0,Img_data.Vel_image.shape[2]):
-            ROI_indx, ROI_indy= np.nonzero(Flow_output.Vel_image_tmp[:,:,x])
-            ROI_indx_BW, ROI_indy_BW= np.nonzero(ROI_art.BWMask[:,:,x])
-            Velocity_values=Flow_output.Vel_image_tmp[ROI_indx,ROI_indy,x]
-            Flow_output.Flows[0][x]=Velocity_values.mean()*( (ROI_indx.shape[0]*vox_size) /1e2)*60  
-            Flow_output.Velocity[0][x]=Velocity_values.mean()
-            Flow_output.CS_area[0][x]=ROI_indx.shape[0]*vox_size
-            Flow_output.rx[0][x]=ROI_indx.shape[0]
-            Flow_output.rx_bw[0][x]=ROI_indx_BW.shape[0]
+        if np.mean(ROI_art.BWMask)==0:
+            print('Please draw ROI for calculation flow')
 
-        print('Flow:')
-        print(Flow_output.Flows)
-        Flow_line_plot.set_ydata(Flow_output.Flows)
-        Flow_line_plot.set_xdata(range(1,Img_data.Vel_image.shape[2]+1))
-        ax_flow.set_xlim([1,Img_data.Vel_image.shape[2]+1])
-        ax_flow.set_ylim([np.min(Flow_output.Flows)*0.9,np.max(Flow_output.Flows)*1.1])
-        canvas_flow.draw()    
-        Flow_output.flow_str="%5.2f" % Flow_output.Flows.mean()
-        Flow_text_str.configure(text=Flow_output.flow_str)
+        else:
+            Flow_output.Vel_image_tmp=ROI_art.BWMask[:,:,range(0,Img_data.Vel_image.shape[2])]*Img_data.Vel_image
+            Flow_output.Flows=np.empty((1,Flow_output.Vel_image_tmp.shape[2],))
+            Flow_output.Velocity=np.empty((1,Flow_output.Vel_image_tmp.shape[2],))
+            Flow_output.CS_area=np.empty((1,Flow_output.Vel_image_tmp.shape[2],))
+
+            if nifti_files:
+                sort_indx=np.argsort(Img_data.img.header.get_data_shape())
+                vox_size=Img_data.img.header.get_zooms()[sort_indx[-1]]*Img_data.img.header.get_zooms()[sort_indx[-2]]
+            else: 
+                vox_size=np.prod( Img_data.img.header.image_defs['pixel spacing'][0:2,0] )
+               
+                
+            for x in range(0,Img_data.Vel_image.shape[2]):
+                #ROI_indx, ROI_indy= np.nonzero(Flow_output.Vel_image_tmp[:,:,x])
+                ROI_indx, ROI_indy= np.nonzero(ROI_art.BWMask[:,:,x])
+
+                ROI_indx_BW, ROI_indy_BW= np.nonzero(ROI_art.BWMask[:,:,x])
+                Velocity_values=Flow_output.Vel_image_tmp[ROI_indx,ROI_indy,x]
+                Flow_output.Flows[0][x]=(Velocity_values.mean())*( (ROI_indx.shape[0]*vox_size) /1e2)*60  
+                Flow_output.Velocity[0][x]=Velocity_values.mean()
+                Flow_output.CS_area[0][x]=ROI_indx.shape[0]*vox_size
+
+               
+            print('Flow:')
+            print(Flow_output.Flows)
+            ax_flow.clear()
+
+            ax_flow.plot(range(1,Img_data.Vel_image.shape[2]+1), Flow_output.Flows[0],'-ro',linewidth=1)
+            ax_flow.set_xlim([1,Img_data.Vel_image.shape[2]+1])
+            ax_flow.set_ylim([np.min(Flow_output.Flows)*0.9,np.max(Flow_output.Flows)*1.1])
+
+            
+            canvas_flow.draw()    
+            Flow_output.flow_str="%5.4f" % Flow_output.Flows.mean()
+            Flow_text_str.configure(text=Flow_output.flow_str)
 
 
 # Function for saving output
@@ -911,31 +1047,42 @@ class save_ouput_data:
     def save_data(self=''):
         output_file=entry_save_filename.get()
 
-        d={'Flow': Flow_output.Flows[0].tolist(), 'Velocity': Flow_output.Velocity[0].tolist(), 'CSarea':Flow_output.CS_area[0].tolist()}
+    
+    # Create the dataframe with proper handling
+        d = {
+            'Flow': Flow_output.Flows[0].tolist(), 
+            'Velocity': Flow_output.Velocity[0].tolist(), 
+            'CSarea': Flow_output.CS_area[0].tolist()
+        }
+    
         df = pd.DataFrame(data=d)
         df.to_csv(output_file)
         Data_saved_txt.configure(text='Data saved:'+output_file)
-        
+
+    
         print('Data saved:'+output_file)
+    
         if npz_roi.status:
-            ROI_filename=os.path.splitext(output_file)[0]+'_ROIs' # Also save ROI as npz data
-            np.savez(ROI_filename, PCMROI_poly=np.array(ROI_art.polygon,dtype='object'), PCMROI_BWMask=ROI_art.BWMask, PCMROI_flag=ROI_art.flag)
-        
+            ROI_filename = os.path.splitext(output_file)[0]+'_ROIs'
+            np.savez(ROI_filename, PCMROI_poly=np.array(ROI_art.polygon,dtype='object'), 
+                 PCMROI_BWMask=ROI_art.BWMask, PCMROI_flag=ROI_art.flag)
+    
         if gif_roi.status:
             if os.path.isdir(os.path.splitext(output_file)[0]+'_RoiImages')==0: 
                 os.mkdir(os.path.splitext(output_file)[0]+'_RoiImages')
             fig_flow.savefig(os.path.splitext(output_file)[0]+'_RoiImages/'+os.path.splitext((output_file.replace('/',' ').split(' ')[-1]))[0]+'_Flow.png') 
-            for i in range(0,Img_data.Vel_image.shape[2]): 
+            for i in range(1,Img_data.Vel_image.shape[2]+1): 
                 update_image(i) 
                 fig.savefig(os.path.splitext(output_file)[0]+'_RoiImages/'+os.path.splitext((output_file.replace('/',' ').split(' ')[-1]))[0]+'_frame'+str(i)+'.png') 
             create_gif(os.path.splitext(output_file)[0]+'_RoiImages/'+os.path.splitext((output_file.replace('/',' ').split(' ')[-1]))[0]) 
-            update_image(imgFrame) 
+            update_image(imgFrame)
+            slider_scale.set(imgFrame) 
 
         if nifti_files:
             if nii_roi.status:
-                raw_img=nib.load(raw_img_filename)
-                ROI_nii = nib.Nifti1Image( numpy.expand_dims(np.flipud(np.rot90(ROI_art.BWMask)),2), affine=raw_img.affine) 
-                nib.save(ROI_nii, os.path.splitext(output_file)[0]+'_ROIs') 
+                raw_img=nib.load(Img_data.raw_img_filename)
+                ROI_nii = nib.Nifti1Image(numpy.expand_dims(np.flipud(np.rot90(ROI_art.BWMask)),2), affine=raw_img.affine) 
+                nib.save(ROI_nii, os.path.splitext(output_file)[0]+'_ROIs')
 
 # Function for creating GIF from .png images:
 def create_gif( path ):
@@ -954,11 +1101,9 @@ def create_gif( path ):
 def donothing():
     print('Do Nothing')
 
-def donothing2():
-    print('Do Nothing')
 # Button groups for saving data
 Save_button_group = LabelFrame(window, text='Save data', borderwidth=2,relief='solid')
-Save_button_group.grid(row=3,rowspan=1,column=0,columnspan=5,sticky='nw',padx=10,pady=2)
+Save_button_group.grid(row=7,rowspan=1,column=0,columnspan=5,sticky='nw',padx=10,pady=2)
 Save_button = Button(master = Save_button_group,
                      height = 2,
                      width = 8,
@@ -966,8 +1111,8 @@ Save_button = Button(master = Save_button_group,
 Save_button.grid(row=0,rowspan=1,column=0,columnspan=1,sticky='sw',pady=2,padx=10)
 
 
-l = Label(Save_button_group, text='Save ROI files: ')
-l.grid(row=0,rowspan=1,column=1,columnspan=1,sticky='se',pady=2,padx=0)
+#l = Label(Save_button_group, text='Save ROI files: ')
+#l.grid(row=0,rowspan=1,column=1,columnspan=1,sticky='se',pady=2,padx=0)
 
 
 
@@ -1016,15 +1161,15 @@ Data_saved_txt = Label(Save_button_group)
 Data_saved_txt.grid(row=2,rowspan=1,column=0,columnspan=12,sticky='se',pady=0,padx=0)
 
 # Button group for calculating flow
-calc_button_group = LabelFrame(window, text='Calculate flow test', borderwidth=2,relief='solid')
-calc_button_group.grid(row=1,rowspan=1,column=0,columnspan=1,sticky='sw',padx=10,pady=10)
+calc_button_group = LabelFrame(window, text='Calculate flow', borderwidth=2,relief='solid')
+calc_button_group.grid(row=4,rowspan=1,column=0,columnspan=1,sticky='sw',padx=10,pady=10)
 
 Venc_str = Label(calc_button_group, text="Venc:")
 Venc_str.grid(row=0,rowspan=1,column=0,columnspan=1,sticky='nw',pady=0,padx=0)
 if nifti_files:
     Venc_ent = Entry(calc_button_group,width=4)
     Venc_ent.grid(row=0,rowspan=1,column=1,columnspan=1,sticky='nw',pady=0,padx=0)
-    Venc_ent.insert(END, '100')
+    Venc_ent.insert(END, '15')
 else:
     Venc_ent = Label(calc_button_group, text=Img_data.Venc)
     Venc_ent.grid(row=0,rowspan=1,column=1,columnspan=1,sticky='nw',pady=0,padx=0)
@@ -1040,14 +1185,6 @@ Flow_text.grid(row=2,rowspan=1,column=0,columnspan=1,sticky='nw')
 
 Flow_text_str = Label(calc_button_group)
 Flow_text_str.grid(row=2,rowspan=1,column=1,columnspan=1,sticky='ne')
-
-
-#VENC_text = Label(calc_button_group, text="VENC:")
-#VENC_text.grid(row=0,rowspan=1,column=0,columnspan=1,sticky='nw',pady=0,padx=10)
-#e_venc = Entry(calc_button_group,width=4)
-#e_venc.grid(row=0,rowspan=1,column=0,columnspan=1,sticky='nw',pady=0,padx=120)
-#e_venc.insert(END, str(Img_data.Venc))
-
 
 
 def load_ROI_file(self=''): # Load ROI as npz data
@@ -1076,7 +1213,7 @@ def popup_help():
     popup.resizable(True,True)
     popup.wm_title("About me")
     help_str='GUI for calculating flow in blood vessel from PCM-images. \n Useable for PAR/REC philips file.'
-    name_str='Mark B. Vestergaard \n mark.bitsch.vestergaard@regionh.dk, \n Functional Imaging Unit \n Department of Clinical Physiology, Nuclear Medicine and PET \n Rigshospitalet, Glostrup, Denmark \n August 2025.' 
+    name_str='Mark B. Vestergaard \n mark.bitsch.vestergaard@regionh.dk, \n Functional Imaging Unit \n Department of Clinical Physiology, Nuclear Medicine and PET \n Rigshospitalet, Glostrup, Denmark \n July 2021.' 
     text_title = Label(popup,text=help_str,anchor="w", background='white')
     text_title.pack(side="top", fill="x", pady=10)
     text_name = Label(popup,text=name_str,justify="left",anchor="w")
