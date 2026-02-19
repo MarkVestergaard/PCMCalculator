@@ -58,9 +58,19 @@ The analysis workflow consists of:
 9. Saving results in CSV format and ROIs in NIfTI, NPZ, and/or animated GIF format
 ---
 
-Please see following reference for research studies where **PCMCalculator** has been used. 
+Please see following reference for research studies where **PCMCalculator** has been used.
 
+Reproducibility of cerebral blood flow, oxygen metabolism, and lactate and N-acetyl-aspartate concentrations measured using magnetic resonance imaging and spectroscopy
+Signe Sloth Madsen, Ulrich Lindberg, Sohail Asghar, Karsten Skovgaard Olsen, Kirsten Møller, Henrik Bo Wiberg Larsson, Mark Bitsch Vestergaard. 
+Frontiers in Physiology. 2023: 14:1213352.
 
+Cerebral metabolic rate of oxygen is correlated to treatment effect of electroconvulsive therapy in patients with depression
+Christoffer Cramer Lundsgaard, André Beyer Mathiassen, Henrik Bo Wiberg Larsson, Poul Videbech, Krzysztof Gbyl, Mark Bitsch Vestergaard
+Brain Stimulation. 2025, 18(5): 1470-1478
+
+Glucose-dependent insulinotropic polypeptide is involved in postprandial regulation of splanchnic blood supply. 
+Rasmus S Rasmussen, Ludvig S Langberg, Frederikke Østergaard, Sophie W Nielsen, Mark B Vestergaard, Kirsa Skov-Jeppesen, Bolette Hartmann, Helle Hjorth Johannesen, Jens J Holst, Bryan Haddock, Henrik BW Larsson, Mette M Rosenkilde, Ali Asmar, Ulrik B Andersen, Lærke S Gasbjerg.
+Diabetes. 2025, 74(8):1355-1366
 
 ## Author
 
