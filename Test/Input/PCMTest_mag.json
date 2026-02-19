@@ -1,0 +1,25 @@
+{
+	"Manufacturer": "Philips",
+	"PatientPosition": "HFS",
+	"SeriesDescription": "ImageMRSERIES",
+	"ProtocolName": "WIPQFLOW_car_Trigger",
+	"SeriesNumber": 4,
+	"AcquisitionNumber": 4,
+	"ImageComments": "Sekvensoptimering",
+	"TriggerDelayTime": 14,
+	"PhilipsRescaleSlope": 1.03663,
+	"PhilipsRescaleIntercept": 0,
+	"PhilipsScaleSlope": 0.181316,
+	"UsePhilipsFloatNotDisplayScaling": 1,
+	"EchoTime": 0.00749,
+	"ImageType": ["ORIGINAL", "PRIMARY", "MAG", "RETRO", "DIS2D", "MFSPLIT", "PHASE"],
+	"ImageOrientationPatientDICOM": [
+		0.99822,
+		0.0569987,
+		0.0175438,
+		-0.0549354,
+		0.99332,
+		-0.101479	],
+	"ConversionSoftware": "dcm2niix",
+	"ConversionSoftwareVersion": "v1.0.20250505"
+}

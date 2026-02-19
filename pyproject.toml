@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "PCMCalculator"
+version = "1.0.0"
+description = "A Python GUI for analyzing 2D Phase Contrast Mapping MRI data to measure blood flow"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [
+    { name = "Mark B. Vestergaard", email = "mark.bitsch.vestergaard@regionh.dk" }
+]
+keywords = ["MRI", "phase contrast", "blood flow", "neuroimaging", "medical imaging", "cerebral blood flow"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Medical Science Apps.",
+    "Topic :: Scientific/Engineering :: Image Processing",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Healthcare Industry",
+]
+requires-python = ">=3.13"
+dependencies = [
+    "matplotlib>=3.7.0",
+    "nibabel>=5.0.0",
+    "numpy>=1.24.0",
+    "pandas>=2.0.0",
+    "scipy>=1.10.0",
+    "scikit-image>=0.21.0",
+    "Pillow>=9.0.0",
+]
+
+[project.urls]
+Repository = "https://github.com/markvestergaard/PCMCalculator"
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[tool.setuptools.package-data]
+"*" = ["*.json"]

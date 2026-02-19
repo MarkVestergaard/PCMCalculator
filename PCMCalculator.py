@@ -80,7 +80,7 @@ Author
 ------
     Mark B. Vestergaard
     Functional Imaging Unit
-    Department of Clinical Physiology and Nuclear Medicine
+    Department of Clinical Physiology, Nuclear Medicine and PET
     Rigshospitalet Copenhagen, Denmark
     mark.bitsch.vestergaard@regionh.dk
 
