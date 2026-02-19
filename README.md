@@ -58,6 +58,9 @@ The analysis workflow consists of:
 9. Saving results in CSV format and ROIs in NIfTI, NPZ, and/or animated GIF format
 ---
 
+Please see following reference for research studies where **PCMCalculator** has been used. 
+
+
 
 ## Author
 
