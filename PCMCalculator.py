@@ -25,7 +25,7 @@ Supported Input Formats
 
 System Requirements
 -------------------
-    - Python 3.13+
+    - Python 3.13
     - Dependencies: tkinter, matplotlib, nibabel, numpy, pandas, scipy, 
       scikit-image, PIL
 
