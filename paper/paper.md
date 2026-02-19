@@ -96,7 +96,7 @@ The displayed image type can be switched between velocity, modulus, magnitude, R
 New data can be loaded via the top menu (File → Load New PAR/REC File or File → Load New NIfTI File).
 
 
-![Figure 1. Demonstration of the interface of the programme. \label{fig:Interface}](./Figures/Figure1.png)
+![Figure 1. Demonstration of the interface of the programme. \label{fig:Interface}](./Figure1.png)
 Figure 1. Demonstration of the interface of the software. (A) The image data is displayed and can be switched between velocity, modulus, magnitude, ROI mask, or mean velocity. An ROI delineating the vessel of interest is drawn to calculate the flow in the vessel. A manual ROI is drawn by selecting **"Add ROI"** in the ROI analysis button group (B). An ROI can be drawn on one frame and copied to all frames. The ROI can be edited on each individual frame to ensure accurate delineation throughout the cardiac cycle. A region-growing algorithm can be used for automatic delineation of the ROI by selecting a seed point in the middle of the vessel. The velocity image can be inverted to ensure a positive flow direction for the target vessel (C). After the ROI has been created, the flow within the ROI can be calculated by pressing **"Calculate Flow"** (D). The mean flow across all frames is shown, and the flow in each frame is plotted in the flow panel (E). (F) The analysis can be saved as a CSV file containing the flow values, mean velocity, and cross-sectional area of the ROI for each frame.
 
 ## ROI Delineation
@@ -128,7 +128,7 @@ $$\Delta V = \max\left(\int [Q - Q_{mean}] \, dt\right) - \min\left(\int [Q - Q_
 
 The pulsatility analysis window displays the flow waveform with horizontal reference lines for $Q_{max}$, $Q_{min}$, and $Q_{mean}$, as well as the cumulative volume integration curve with the ΔV value annotated. The calculation requires the user to input the heart rate to establish the correct temporal resolution.
 
-![Figure 2. Demonstration of pulsatility analysis \label{fig:Pulsatility}](./Figures/Figure2.png)
+![Figure 2. Demonstration of pulsatility analysis \label{fig:Pulsatility}](./Figure2.png)
 Figure 2. Demonstration of pulsatility analysis. (A) The maximum ($Q_{max}$), minimum ($Q_{min}$), and mean ($Q_{mean}$) flow rates over the cardiac cycle are identified, from which the pulsatility index is calculated. (B) The cumulative volume integration curve is derived, from which the arterial pulsatile volume (ΔV) is obtained.
 
 ## Results Export
