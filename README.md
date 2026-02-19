@@ -58,7 +58,7 @@ The analysis workflow consists of:
 9. Saving results in CSV format and ROIs in NIfTI, NPZ, and/or animated GIF format
 ---
 
-Please see following reference for research studies where **PCMCalculator** has been used.
+Please see the following references for research studies in which **PCMCalculator** has been used.
 
 Reproducibility of cerebral blood flow, oxygen metabolism, and lactate and N-acetyl-aspartate concentrations measured using magnetic resonance imaging and spectroscopy
 Signe Sloth Madsen, Ulrich Lindberg, Sohail Asghar, Karsten Skovgaard Olsen, Kirsten Møller, Henrik Bo Wiberg Larsson, Mark Bitsch Vestergaard. 
