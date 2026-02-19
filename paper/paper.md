@@ -15,8 +15,7 @@ affiliations:
   - name: Functional Imaging Unit, Department of Clinical Physiology and Nuclear Medicine, Copenhagen University Hospital Rigshospitalet, Glostrup, Denmark
     index: 1
 date: 23 January 2026
-bibliography: /Users/mark/Documents/icloud/Text/PCMcalculator/paper.bib
-csl:  /Users/mark/Documents/icloud/Text/PCMcalculator/nature-publishing-group-vancouver.csl
+bibliography: paper.bib
 pdf-engine: xelatex
 ---
 
