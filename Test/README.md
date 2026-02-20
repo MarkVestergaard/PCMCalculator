@@ -25,7 +25,8 @@ The expected results of the analysis are provided in the output folder as a CSV 
 ...
 ...
 ```
+## Example output images
 
-![ROI animation](Output/PCMTest_ph_Flow_data_ROIgif/PCMTest_ph_Flow_data_frame1.png)
+![ROI example](Output/PCMTest_ph_Flow_data_ROIgif/PCMTest_ph_Flow_data_frame1.png)
 
-![ROI animation](Output/PCMTest_ph_Flow_data_ROIgif/PCMTest_ph_Flow_data_Flow.png)
+![Flow waveform output](Output/PCMTest_ph_Flow_data_ROIgif/PCMTest_ph_Flow_data_Flow.png)
