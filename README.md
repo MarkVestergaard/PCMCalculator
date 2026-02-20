@@ -28,20 +28,31 @@ git clone https://github.com/MarkVestergaard/PCMCalculator.git
 cd PCMCalculator
 pip install -r requirements.txt
 ```
-
+The required packages are: tkinter (included with standard Python), matplotlib, nibabel, numpy, pandas, scipy, scikit-image, and Pillow.
 ---
 
 ## Usage
 
+`PCMCalculator` is launched from the command line:
+
 ```bash
-# Launch with file dialog
+cd /path/to/PCMCalculator
 python PCMCalculator.py
+```
 
-# Load a Philips PAR/REC file directly
+When launched without arguments, a file dialog opens for the user to select the input image file. Alternatively, input files can be specified directly via command-line arguments. For Philips PAR/REC files:
+
+```bash
 python PCMCalculator.py --img /path/to/file.PAR
+```
 
-# Load NIfTI files directly
-python PCMCalculator.py --img_nii_vel velocity.nii --img_nii_mod modulus.nii --img_nii_mag magnitude.nii
+For NIfTI files (converted from DICOM using dcm2niix), three files corresponding to the velocity (phase), modulus, and magnitude images must be provided:
+
+```bash
+python PCMCalculator.py \
+    --img_nii_vel velocity.nii \
+    --img_nii_mod modulus.nii \
+    --img_nii_mag magnitude.nii
 ```
 
 For NIfTI input, JSON sidecar files produced by [dcm2niix](https://github.com/rordenlab/dcm2niix) must be present alongside the NIfTI files.
