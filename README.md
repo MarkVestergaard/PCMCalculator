@@ -79,6 +79,18 @@ The analysis workflow consists of:
 
 Once the ROI has been defined, the flow in each frame can be calculated by pressing **"Calculate Flow"**. The resulting flow waveform is displayed in the rightmost panel. Results can be saved as a CSV file containing flow (ml/min), mean velocity (cm/s), and cross-sectional area (mm²) for each frame using **"Save Data"**. ROI masks can optionally be saved in NIfTI, NPZ, and/or animated GIF format.
 
+## Keyboard Shortcuts
+
+| Shortcut | Action |
+|----------|--------|
+| Ctrl+1–5 | Switch image display (velocity, modulus, magnitude, ROI, mean velocity) |
+| Ctrl+Q/W/E | Change colormap (jet, grayscale, viridis) |
+| Ctrl+N | Load new PAR/REC file |
+| Ctrl+M | Load new NIfTI file |
+| Ctrl+R | Load saved ROI file |
+| Ctrl+S | Save flow data |
+| Ctrl+P | Open pulsatility analysis |
+| Up/Down arrows | Navigate through frames |
 
 ## References
 Please see the following references for research studies in which **PCMCalculator** has been used.
