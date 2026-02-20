@@ -150,8 +150,8 @@ Recently, `PCMCalculator` has also been applied to measure blood flow in the lar
 
 `PCMCalculator` can also be used to perform pulsatility analysis of blood flow from cardiac-gated measurements.
 
-# Conclusion
-
 `PCMCalculator` provides a freely available, open-source, and easy-to-use software for the analysis of 2D phase-contrast MRI data and quantification of blood flow. By offering an intuitive graphical user interface that requires no programming expertise. The broad range of research applications in which `PCMCalculator` has been successfully employed, demonstrates its versatility and utility across different physiological domains. It is hoped that `PCMCalculator` can serve as a valuable and accessible tool for the wider MRI research and clinical community.
+
+Vestergaard, M.B. (2026). PCMCalculator: A Python GUI for Analyzing 2D Phase Contrast Mapping MRI Data to Measure Blood Flow (v1.0.1). Zenodo. https://doi.org/10.5281/zenodo.18712355 [@Vestergaard2026]
  
 # References
