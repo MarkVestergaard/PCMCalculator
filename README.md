@@ -28,7 +28,9 @@ git clone https://github.com/MarkVestergaard/PCMCalculator.git
 cd PCMCalculator
 pip install -r requirements.txt
 ```
+
 The required packages are: tkinter (included with standard Python), matplotlib, nibabel, numpy, pandas, scipy, scikit-image, and Pillow.
+
 ---
 
 ## Usage
