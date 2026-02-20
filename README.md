@@ -5,7 +5,6 @@
 **PCMCalculator** (**P**hase **C**ontrast **M**apping Calculator) is a Python-based GUI for analyzing 2D phase-contrast MRI data and quantifying blood flow in vessels (ml/min).
 The software offers an intuitive graphical user interface that enables users to load, visualize, and analyze PCM data and calculate blood flow without any programming expertise. Images can be displayed with adjustable colormaps and intensity ranges to optimize vessel visibility. Region of interests (ROIs) covering the targeted vessels can be defined either through manual polygon delineation or generated semi-automatically using a built-in region-growing algorithm. From these ROIs, blood flow is calculated in quantitative units (ml/min), along with mean velocity (cm/s) and cross-sectional area (mm²). Results can be exported to CSV format for further statistical analysis, and ROI masks can be saved in NIfTI or NumPy archive formats for reproducibility. The software was developed so that personnel without a programming background could use it for their analyses, thus widening its usability across clinical and research settings.
 
-![Interface](Interface.png)
 
 ---
 
@@ -59,7 +58,6 @@ python PCMCalculator.py \
 
 For NIfTI input, JSON sidecar files produced by [dcm2niix](https://github.com/rordenlab/dcm2niix) must be present alongside the NIfTI files.
 
-
 The analysis workflow consists of:
 
 1. Loading magnitude and phase (velocity) images from the phase-contrast acquisition in PAR/REC or NIfTI format
@@ -72,7 +70,19 @@ The analysis workflow consists of:
 8. Optionally performing pulsatility analysis to obtain the Pulsatility Index and ΔV
 9. Saving results in CSV format and ROIs in NIfTI, NPZ, and/or GIF format
 ---
+ ## Interface 
 
+ ![Interface](Interface.png)
+The displayed data type can be switched between velocity, modulus, magnitude, ROI mask, and mean velocity map via the top menu (Image → Change Image Type) or by keyboard shortcuts (Ctrl+1 through Ctrl+5). The colormap can be changed between jet, grayscale, and viridis via the menu (Image → Change Colorbar) or by keyboard shortcuts (Ctrl+Q, Ctrl+W, and Ctrl+E). Colorbar intensity limits can also be manually adjusted. If the data contains multiple frames, these can be navigated using either the arrow keys or the slider. Velocity is displayed in cm/s, as this is the most commonly used unit for phase-contrast MRI data. The ROI mask image shows which voxels are included in the drawn ROI. The mean velocity map displays an average across frames; the frames to be included in this average can be specified in the input box labeled Avg. Vel. Frames. 
+
+New data can be loaded via the top menu (File → Load New PAR/REC File or File → Load New NIfTI File).
+
+Region of interests covering the vessel of interest can be defined either by manual delineation or by using the semi-automatic region-growing algorithm. 
+
+Data is saved in CSV files and ROIs can be saved in NIfTI, NPZ, and/or GIF format. 
+
+
+## References
 Please see the following references for research studies in which **PCMCalculator** has been used.
 
 Reproducibility of cerebral blood flow, oxygen metabolism, and lactate and N-acetyl-aspartate concentrations measured using magnetic resonance imaging and spectroscopy
