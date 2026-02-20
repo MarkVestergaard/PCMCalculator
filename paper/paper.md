@@ -58,39 +58,7 @@ The analysis workflow consists of:
 9. Saving results in CSV format and, optionally, ROIs in NIfTI, NPZ, and/or animated GIF format
 
 
-## Installation
-
-`PCMCalculator` requires Python 3.13 or later. Download the `PCMCalculator` repository and install the required dependencies:
-
-```bash
-pip install -r requirements.txt
-```
-
-The required packages are: tkinter (included with standard Python), matplotlib, nibabel, numpy, pandas, scipy, scikit-image, and Pillow.
-
-## Usage
-
-`PCMCalculator` is launched from the command line:
-
-```bash
-cd /path/to/PCMCalculator
-python PCMCalculator.py
-```
-
-When launched without arguments, a file dialog opens for the user to select the input image file. Alternatively, input files can be specified directly via command-line arguments. For Philips PAR/REC files:
-
-```bash
-python PCMCalculator.py --img /path/to/file.PAR
-```
-
-For NIfTI files (converted from DICOM using dcm2niix), three files corresponding to the velocity (phase), modulus, and magnitude images must be provided:
-
-```bash
-python PCMCalculator.py \
-    --img_nii_vel velocity.nii \
-    --img_nii_mod modulus.nii \
-    --img_nii_mag magnitude.nii
-```
+## Input data
 
 The software requires three image modalities as input: velocity (phase), modulus, and magnitude images. These are standardly saved when acquiring phase-contrast MRI data. In PAR/REC format, the data is typically saved in a single file. When using the NIfTI format, the three image modalities are typically saved in separate files. The data can contain multiple frames, for example when acquired using cardiac gating, where each frame represents a different time point in the cardiac cycle.
 
