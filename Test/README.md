@@ -21,8 +21,7 @@ The expected results of the analysis are provided in the output folder as a CSV 
 1,135.48,20.91,10.80
 2,360.03,34.02,17.64
 3,367.51,36.99,16.56
-...
-
+```
 
 ![ROI animation](Output/PCMTest_ph_Flow_data_ROIgif/PCMTest_ph_Flow_data_frame1.png)
 
