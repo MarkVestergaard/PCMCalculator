@@ -40,15 +40,13 @@ The GUI is organized into three main panels: a control panel on the left contain
 
 The analysis workflow consists of:
 
-1. Loading magnitude and phase (velocity) images from the phase-contrast acquisition in PAR/REC or NIfTI format
+1. Loading magnitude and phase (velocity) images in PAR/REC or NIfTI format
 2. Adjusting visualization settings including colormap (jet, grayscale, or viridis) and intensity range to optimise vessel visibility
 3. If needed, inverting the velocity image to ensure a positive flow direction in the target vessel
 4. Defining ROIs around vessels of interest either by manual polygon delineation or by using the semi-automatic region-growing algorithm
-5. Copying the ROI to all frames, then editing individual frames as needed to ensure accurate delineation throughout each frame
-6. Computing mean velocity and cross-sectional area within each ROI for each frame
-7. Calculating flow (velocity × cross-sectional area) and reviewing the flow waveform and mean flow value
-8. Optionally performing pulsatility analysis to obtain the Pulsatility Index and ΔV
-9. Saving results in CSV format and, optionally, ROIs in NIfTI, NPZ, and/or animated GIF format
+5. Calculate velocity, cross-sectional area and flow in the ROIs for each frame
+6. Optionally performing pulsatility analysis to obtain the Pulsatility Index and ΔV
+7. Saving results in CSV format and, optionally, ROIs in NIfTI, NPZ, and/or animated GIF format
 
 
 ## Input data
