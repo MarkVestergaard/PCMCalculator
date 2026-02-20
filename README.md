@@ -77,9 +77,12 @@ The displayed data type can be switched between velocity, modulus, magnitude, RO
 
 New data can be loaded via the top menu (File → Load New PAR/REC File or File → Load New NIfTI File).
 
-Region of interests covering the vessel of interest can be defined either by manual delineation or by using the semi-automatic region-growing algorithm. 
+`PCMCalculator` provides two methods for ROI delineation. Manual ROIs are drawn by selecting **"Add ROI"** in the ROI analysis button group, which activates the polygon drawing tool. Polygons are directly drawn on the image using an interactive polygon selector. After drawing, the ROI can be toggled between editable and locked states using the **"Edit ROI"** button. A ROI can be drawn on one of the frames and copied to all frames. The ROI can be edited on each specific frame to ensure accurate delineation throughout each frame.
+Alternatively, the semi-automatic region-growing algorithm allows users to place a seed point approximately in the center of the vessel, after which the algorithm grows outward to include neighboring voxels whose velocity values exceed a user-defined threshold (default: 10 cm/s). The growth is additionally constrained by a maximum distance from the seed point (default: 8 pixels) to prevent the region from extending beyond the vessel boundary. For multi-frame data, the region-growing algorithm automatically tracks the vessel across all frames by updating the seed position to the voxel with the highest velocity within the current region.
 
-Data is saved in CSV files and ROIs can be saved in NIfTI, NPZ, and/or GIF format. 
+Once the ROI has be defined, the flow in each frame can be calculated by **"Calculate Flow"**. The resulting flow waveform is presented in the rigthmost figure.  
+
+Results can saved in CSV files containing flow (ml/min), velocity (cm/s) and cross-sectional area (mm²) for each frame using **"Save Data"**. ROI images can be saved in NIfTI, NPZ, and/or GIF format. 
 
 
 ## References
