@@ -39,7 +39,7 @@ Despite the widespread availability of phase-contrast sequences on practically a
 - **Pulsatility analysis**: Built-in calculation of the Pulsatility Index and Volume of Arterial Pulsatility (ΔV) for cardiac-gated acquisitions
 - **Reproducible outputs**: Standardized CSV export for statistical analysis, with optional ROI export in NIfTI and NumPy formats for full reproducibility
 
-# Implementation
+# Software design
 
 `PCMCalculator` is implemented in Python 3.13 and utilizes established scientific computing libraries including NumPy for numerical operations, NiBabel for handling of medical image formats, Matplotlib for visualization, Tkinter for the graphical interface, pandas for data export, SciPy for numerical integration, and scikit-image for contour extraction in the region-growing algorithm. The software reads Philips PAR/REC files directly via NiBabel's PAR/REC reader or NIfTI files converted from DICOM data using dcm2niix. For NIfTI input, accompanying JSON sidecar files (produced by dcm2niix) are required to identify the image types (velocity, modulus, and phase magnitude).
 
@@ -58,7 +58,7 @@ The analysis workflow consists of:
 9. Saving results in CSV format and, optionally, ROIs in NIfTI, NPZ, and/or animated GIF format
 
 
-# Installation
+## Installation
 
 `PCMCalculator` requires Python 3.13 or later. Download the `PCMCalculator` repository and install the required dependencies:
 
@@ -68,7 +68,7 @@ pip install -r requirements.txt
 
 The required packages are: tkinter (included with standard Python), matplotlib, nibabel, numpy, pandas, scipy, scikit-image, and Pillow.
 
-# Usage
+## Usage
 
 `PCMCalculator` is launched from the command line:
 
@@ -143,10 +143,6 @@ Optional output formats include:
 - **NIfTI**: ROI masks saved as NIfTI images with the same geometry as the input data, enabling integration with other neuroimaging analysis pipelines.
 - **Animated GIF**: PNG images of each frame with the ROI overlay compiled into an animated GIF for visualization and quality control purposes.
 
-# AI Usage Disclosure
-Generative AI (Claude Sonnet ver. 4.6, Anthropic) was used to assist with improving the documentation and code comments within the software. All AI-generated documentation was reviewed, edited, and verified for accuracy by the author. The software design, implementation, and scientific content were developed without AI assistance.
-
-
 # Research impact statement
 `PCMCalculator` can be used to analyze any kind of 2D phase-contrast MRI data independent of vessel and site, thus offering broad applicability across a wide range of clinical and research contexts. So far, `PCMCalculator` has been used in numerous research projects investigating cerebral blood flow (CBF), and has been used to examine for abnormal cerebral physiology in various patient groups [@Knudsen2024; @Vestergaard2023a; @Lundsgaard2025; @Musaeus2025], to assess cerebral hemodynamic responses to hypoxic exposure [@Vestergaard2022], and to assess cerebrovascular reactivity to breath-hold challenges and acetazolamide administration [@Vestergaard2019; @Vestergaard2023b]. These studies highlight the software's ability to handle a variety of experimental paradigms and physiological challenges, providing blow flow quantification under varying conditions. The software has also been used in conjunction with other perfusion-weighted techniques such as arterial spin labelling (ASL) and water PET imaging, where phase-contrast MRI measurements have served as an independent reference for calibration and quantification purposes [@Vestergaard2022; @Vestergaard2025]. The reproducibility of the software for assessing cerebral blood flow has been investigated in dedicated test-retest studies, supporting its suitability for longitudinal and repeated-measures research designs [@Madsen2023].
 
@@ -155,6 +151,9 @@ Recently, `PCMCalculator` has also been applied to measure blood flow in the lar
 `PCMCalculator` can also be used to perform pulsatility analysis of blood flow from cardiac-gated measurements.
 
 `PCMCalculator` provides a freely available, open-source, and easy-to-use software for the analysis of 2D phase-contrast MRI data and quantification of blood flow. By offering an intuitive graphical user interface that requires no programming expertise. The broad range of research applications in which `PCMCalculator` has been successfully employed, demonstrates its versatility and utility across different physiological domains. It is hoped that `PCMCalculator` can serve as a valuable and accessible tool for the wider MRI research and clinical community.
+
+# AI Usage Disclosure
+Generative AI (Claude Sonnet ver. 4.6, Anthropic) was used to assist with improving the documentation and code comments within the software. All AI-generated documentation was reviewed, edited, and verified for accuracy by the author. The software design, implementation, and scientific content were developed without AI assistance.
 
 Vestergaard, M.B. (2026). PCMCalculator: A Python GUI for Analyzing 2D Phase Contrast Mapping MRI Data to Measure Blood Flow (v1.0.1). Zenodo. https://doi.org/10.5281/zenodo.18712355 [@Vestergaard2026]
  
