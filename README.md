@@ -70,6 +70,7 @@ The analysis workflow consists of:
 8. Optionally performing pulsatility analysis to obtain the Pulsatility Index and ΔV
 9. Saving results in CSV format and ROIs in NIfTI, NPZ, and/or GIF format
 ---
+ 
  ## Interface 
 
  ![Interface](Interface.png)
@@ -78,6 +79,8 @@ The analysis workflow consists of:
 `PCMCalculator` provides two methods for ROI delineation. Manual ROIs are drawn by selecting **"Add ROI"** in the ROI analysis button group, which activates the polygon drawing tool. Polygons are directly drawn on the image using an interactive polygon selector. After drawing, the ROI can be toggled between editable and locked states using the **"Edit ROI"** button. An ROI can be drawn on one frame and copied to all frames, and can be edited on each individual frame to ensure accurate delineation throughout the cardiac cycle. Alternatively, the semi-automatic region-growing algorithm allows users to place a seed point approximately in the center of the vessel, after which the algorithm grows outward to include neighbouring voxels whose velocity values exceed a user-defined threshold (default: 10 cm/s). The growth is additionally constrained by a maximum distance from the seed point (default: 8 pixels) to prevent the region from extending beyond the vessel boundary. For multi-frame data, the region-growing algorithm automatically tracks the vessel across all frames by updating the seed position to the voxel with the highest velocity within the current region.
 
 Once the ROI has been defined, the flow in each frame can be calculated by pressing **"Calculate Flow"**. The resulting flow waveform is displayed in the rightmost panel. Results can be saved as a CSV file containing flow (ml/min), mean velocity (cm/s), and cross-sectional area (mm²) for each frame using **"Save Data"**. ROI masks can optionally be saved in NIfTI, NPZ, and/or animated GIF format.
+
+---
 
 ## Keyboard Shortcuts
 
@@ -92,7 +95,10 @@ Once the ROI has been defined, the flow in each frame can be calculated by press
 | Ctrl+P | Open pulsatility analysis |
 | Up/Down arrows | Navigate through frames |
 
+---
+
 ## References
+
 Please see the following references for research studies in which **PCMCalculator** has been used.
 
 Reproducibility of cerebral blood flow, oxygen metabolism, and lactate and N-acetyl-aspartate concentrations measured using magnetic resonance imaging and spectroscopy
@@ -106,6 +112,8 @@ Brain Stimulation. 2025, 18(5): 1470-1478
 Glucose-dependent insulinotropic polypeptide is involved in postprandial regulation of splanchnic blood supply. 
 Rasmus S Rasmussen, Ludvig S Langberg, Frederikke Østergaard, Sophie W Nielsen, Mark B Vestergaard, Kirsa Skov-Jeppesen, Bolette Hartmann, Helle Hjorth Johannesen, Jens J Holst, Bryan Haddock, Henrik BW Larsson, Mette M Rosenkilde, Ali Asmar, Ulrik B Andersen, Lærke S Gasbjerg.
 Diabetes. 2025, 74(8):1355-1366
+
+---
 
 ## Author
 
