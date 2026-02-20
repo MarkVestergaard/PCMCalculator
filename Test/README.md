@@ -14,4 +14,6 @@ python PCMCalculator.py --img_nii_vel Test/Input/PCMTest_ph.nii --img_nii_mod Te
 
 The expected results of the analysis are provided in the output folder as a CSV file, containing the flow (ml/min), mean velocity (cm/s), and cross-sectional area (mm²) for each frame. Users can compare their results against these reference values to verify correct installation and function of the software.
 
+[PCMTest_ph_Flow_data.csv](Output/PCMTest_ph_Flow_data_ROIgif/PCMTest_ph_Flow_data.csv)
+
 ![ROI animation](Output/PCMTest_ph_Flow_data_ROIgif/PCMTest_ph_Flow_data.gif)
