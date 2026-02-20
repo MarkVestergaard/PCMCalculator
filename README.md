@@ -55,7 +55,7 @@ The analysis workflow consists of:
 6. Computing mean velocity and cross-sectional area within each ROI for each frame
 7. Calculating flow and reviewing the flow waveform and mean flow value
 8. Optionally performing pulsatility analysis to obtain the Pulsatility Index and ΔV
-9. Saving results in CSV format and ROIs in NIfTI, NPZ, and/or animated GIF format
+9. Saving results in CSV format and ROIs in NIfTI, NPZ, and/or GIF format
 ---
 
 Please see the following references for research studies in which **PCMCalculator** has been used.
