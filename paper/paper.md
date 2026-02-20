@@ -86,7 +86,10 @@ python PCMCalculator.py --img /path/to/file.PAR
 For NIfTI files (converted from DICOM using dcm2niix), three files corresponding to the velocity (phase), modulus, and magnitude images must be provided:
 
 ```bash
-python PCMCalculator.py --img_nii_vel velocity.nii --img_nii_mod modulus.nii --img_nii_mag magnitude.nii
+python PCMCalculator.py \
+    --img_nii_vel velocity.nii \
+    --img_nii_mod modulus.nii \
+    --img_nii_mag magnitude.nii
 ```
 
 The software requires three image modalities as input: velocity (phase), modulus, and magnitude images. These are standardly saved when acquiring phase-contrast MRI data. In PAR/REC format, the data is typically saved in a single file. When using the NIfTI format, the three image modalities are typically saved in separate files. The data can contain multiple frames, for example when acquired using cardiac gating, where each frame represents a different time point in the cardiac cycle.
