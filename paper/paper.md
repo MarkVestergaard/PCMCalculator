@@ -30,14 +30,7 @@ Phase-contrast MRI is a widely used and well-established technique for the non-i
 
 Quantitative in vivo measurement of blood flow is a highly valuable tool for studying physiology and pathophysiology, with applications spanning multiple clinical and research domains. Phase-contrast MRI enables non-invasive blood flow quantification in both human subjects and preclinical animal models. For example, phase-contrast MRI is widely used to measure cerebral blood flow (CBF) by quantifying flow in the internal carotid and basilar arteries [@Vestergaard2017; @Vestergaard2019; @Ruitenberg2005; @Vernooij2008; @Vestergaard2023a]. Phase-contrast MRI is also extensively used to study cardiac flow and blood flow in the aorta and other large abdominal and thoracic vessels [@Chai2005; @Bertelsen2016; @Rasmussen2025].
 
-Despite the widespread availability of phase-contrast sequences on practically all MRI scanners, post-processing of phase-contrast data for flow quantification often requires either commercial vendor-specific software packages or custom programming solutions that lack user-friendly interfaces for non-technical personnel. Commercial tools may be expensive and proprietary, while developing custom analysis pipelines requires programming expertise that may not be available in all clinical or research environments. PCMCalculator addresses this gap by providing an open-source, easy-to-use, and lightweight software tool for PCM analysis. The main advantages of PCMCalculator are:
-
-- **Open-source accessibility**: Freely available software
-- **Multi-vendor support**: Supports Philips PAR/REC files directly and NIfTI files converted from Siemens or other vendor DICOM data using dcm2niix [@Li2016] and tested on data from multiple different scanners including a 3T Philips dSTREAM Achieva and a 3T Siemens Biograph mMR hybrid PET/MR system
-- **User-friendly GUI**: No programming expertise required for routine analysis
-- **Flexible ROI tools**: Both manual polygon delineation and semi-automatic region-growing segmentation
-- **Pulsatility analysis**: Built-in calculation of the Pulsatility Index and Volume of Arterial Pulsatility (ΔV) for cardiac-gated acquisitions
-- **Reproducible outputs**: Standardized CSV export for statistical analysis, with optional ROI export in NIfTI and NumPy formats for full reproducibility
+Despite the widespread availability of phase-contrast sequences on practically all MRI scanners, post-processing of phase-contrast data for flow quantification often requires either commercial vendor-specific software packages or custom programming solutions that lack user-friendly interfaces for non-technical personnel. Commercial tools may be expensive and proprietary, while developing custom analysis pipelines requires programming expertise that may not be available in all clinical or research environments. PCMCalculator addresses this gap by providing an open-source, easy-to-use, and lightweight software tool for PCM analysis.
 
 # Software design
 
