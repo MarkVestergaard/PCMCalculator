@@ -155,6 +155,7 @@ Recently, `PCMCalculator` has also been applied to measure blood flow in the lar
 # AI Usage Disclosure
 Generative AI (Claude Sonnet ver. 4.6, Anthropic) was used to assist with improving the documentation and code comments within the software. All AI-generated documentation was reviewed, edited, and verified for accuracy by the author. The software design, implementation, and scientific content were developed without AI assistance.
 
+#
 Vestergaard, M.B. (2026). PCMCalculator: A Python GUI for Analyzing 2D Phase Contrast Mapping MRI Data to Measure Blood Flow (v1.0.1). Zenodo. https://doi.org/10.5281/zenodo.18712355 [@Vestergaard2026]
  
 # References
