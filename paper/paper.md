@@ -62,21 +62,20 @@ The analysis workflow consists of:
 
 The software requires three image modalities as input: velocity (phase), modulus, and magnitude images. These are standardly saved when acquiring phase-contrast MRI data. In PAR/REC format, the data is typically saved in a single file. When using the NIfTI format, the three image modalities are typically saved in separate files. The data can contain multiple frames, for example when acquired using cardiac gating, where each frame represents a different time point in the cardiac cycle.
 
-![Figure 1. Demonstration of the interface of the programme. \label{fig:Interface}](./Figure1.png)
-Figure 1. Demonstration of the interface of the software. (A) The image data is displayed and can be switched between velocity, modulus, magnitude, ROI mask, or mean velocity. An ROI delineating the vessel of interest is drawn to calculate the flow in the vessel. A manual ROI is drawn by selecting **"Add ROI"** in the ROI analysis button group (B). An ROI can be drawn on one frame and copied to all frames. The ROI can be edited on each individual frame to ensure accurate delineation throughout the cardiac cycle. A region-growing algorithm can be used for automatic delineation of the ROI by selecting a seed point in the middle of the vessel. The velocity image can be inverted to ensure a positive flow direction for the target vessel (C). After the ROI has been created, the flow within the ROI can be calculated by pressing **"Calculate Flow"** (D). The mean flow across all frames is shown, and the flow in each frame is plotted in the flow panel (E). (F) The analysis can be saved as a CSV file containing the flow values, mean velocity, and cross-sectional area of the ROI for each frame.
-
 ## ROI Delineation
 
-`PCMCalculator` provides two methods for ROI delineation (Figure 1). Manual ROIs are drawn by selecting **"Add ROI"** in the ROI analysis button group, which activates the polygon drawing tool. Polygons are directly drawn on the image using an interactive polygon selector. After drawing, the ROI can be toggled between editable and locked states using the **"Edit ROI"** button. A ROI can be drawn on one of the frames and copied to all frames. The ROI can be edited on each specific frame to ensure accurate delineation throughout each frame.
-Alternatively, the semi-automatic region-growing algorithm allows users to place a seed point approximately in the center of the vessel, after which the algorithm grows outward to include neighboring voxels whose velocity values exceed a user-defined threshold (default: 10 cm/s). The growth is additionally constrained by a maximum distance from the seed point (default: 8 pixels) to prevent the region from extending beyond the vessel boundary. For multi-frame data, the region-growing algorithm automatically tracks the vessel across all frames by updating the seed position to the voxel with the highest velocity within the current region.
+ROI covering the vessel of interest can be manually draw using a polygon drawing tool (Figure 1). Alternatively, the semi-automatic region-growing algorithm allows users to place a seed point approximately in the center of the vessel, after which the algorithm grows outward to include neighboring voxels whose velocity values exceed a user-defined threshold (default: 10 cm/s). The growth is additionally constrained by a maximum distance from the seed point (default: 8 pixels) to prevent the region from extending beyond the vessel boundary. For multi-frame data, the region-growing algorithm automatically tracks the vessel across all frames by updating the seed position to the voxel with the highest velocity within the current region.
+
+![Figure 1. Demonstration of the interface of the programme. \label{fig:Interface}](./Figure1.png)
+Figure 1. Demonstration of the interface of the software. (A) The image data is displayed and can be switched between velocity, modulus, magnitude, ROI mask, or mean velocity. An ROI delineating the vessel of interest is drawn to calculate the flow in the vessel (B). An ROI can be drawn on one frame and copied to all frames. The ROI can be edited on each individual frame to ensure accurate delineation throughout the cardiac cycle. A region-growing algorithm can be used for automatic delineation of the ROI by selecting a seed point in the middle of the vessel. The velocity image can be inverted to ensure a positive flow direction for the target vessel (C). After the ROI has been created, the flow within the ROI can be calculated (D). The mean flow across all frames is shown, and the flow in each frame is plotted in the flow panel (E). (F) The analysis can be saved as a CSV file containing the flow values, mean velocity, and cross-sectional area of the ROI for each frame.
 
 ## Flow Calculation
-Once ROIs are defined, pressing **"Calculate Flow"** computes the flow for each frame. The calculated flow waveform is displayed in the rightmost panel, along with the mean flow value.
-For each frame, the mean velocity within the ROI is calculated from the velocity map. The cross-sectional area of the vessel is determined by multiplying the number of voxels within the ROI by the in-plane voxel area (obtained from the image header). Flow ($Q$) is then computed as:
+Once ROIs are defined, the flow can be calculated. For each frame, the mean velocity within the ROI is calculated from the velocity map. The cross-sectional area of the vessel is determined by multiplying the number of voxels within the ROI by the in-plane voxel area (obtained from the image header). Flow ($Q$) is then computed as:
 
 $$Q = V_{mean} \cdot 60 \cdot A \cdot 0.01$$
 
 where $V_{mean}$ is the mean velocity within the ROI (cm/s) and $A$ is the cross-sectional area (mm²). The result is converted to ml/min, the most commonly used unit for blood flow measurements, by multiplying the velocity by 60 and the cross-sectional area by 0.01. The mean flow across all frames is calculated, and the flow in each frame is plotted in the flow panel.
+The calculated flow waveform is displayed in the rightmost panel, along with the mean flow value.
 
 ## Pulsatility Analysis
 
@@ -99,7 +98,7 @@ Figure 2. Demonstration of pulsatility analysis. (A) The maximum ($Q_{max}$), mi
 
 ## Results Export
 
-Data is saved by providing a save file path and pressing **"Save data"**. The calculated flow from the analysis is saved as a CSV file containing flow (ml/min), mean velocity (cm/s), and cross-sectional area (mm²) of the ROI for each frame. The output filename is automatically generated based on the input filename but can be manually edited before saving.
+Data is saved by providing a save file path. The calculated flow from the analysis is saved as a CSV file containing flow (ml/min), mean velocity (cm/s), and cross-sectional area (mm²) of the ROI for each frame. The output filename is automatically generated based on the input filename but can be manually edited before saving.
 
 Optional output formats include:
 
