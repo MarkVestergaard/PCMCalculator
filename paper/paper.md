@@ -16,7 +16,6 @@ affiliations:
     index: 1
 date: 23 January 2026
 bibliography: paper.bib
-pdf-engine: xelatex
 ---
 
 # Summary
