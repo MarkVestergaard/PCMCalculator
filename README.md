@@ -63,7 +63,7 @@ The analysis workflow consists of:
 1. Loading magnitude and phase (velocity) images from the phase-contrast acquisition in PAR/REC or NIfTI format
 2. Adjusting visualization settings including colormap (jet, grayscale, or viridis) and intensity range to optimise vessel visibility
 3. If needed, inverting the velocity image to ensure a positive flow direction in the target vessel
-4. Defining ROIs around vessels of interest either by manual polygon delineation or by using the semi-automatic region-growing algorithm
+4. Defining ROIs around vessels of interest either by manual delineation or by using the semi-automatic region-growing algorithm
 5. Copying the ROI to all frames, then editing individual frames as needed to ensure accurate delineation throughout each frame
 6. Computing mean velocity and cross-sectional area within each ROI for each frame
 7. Calculating flow and reviewing the flow waveform and mean flow value
