@@ -5,17 +5,6 @@
 **PCMCalculator** (**P**hase **C**ontrast **M**apping Calculator) is a Python-based GUI for analyzing 2D phase-contrast MRI data and quantifying blood flow in vessels (ml/min).
 The software offers an intuitive graphical user interface that enables users to load, visualize, and analyze PCM data and calculate blood flow without any programming expertise. Images can be displayed with adjustable colormaps and intensity ranges to optimize vessel visibility. Region of interest (ROIs) covering the targeted vessels can be defined either through manual polygon delineation or generated semi-automatically using a built-in region-growing algorithm. From these ROIs, blood flow is calculated in quantitative units (ml/min), along with mean velocity (cm/s) and cross-sectional area (mm²). Results can be exported to CSV format for further statistical analysis, and ROI masks can be saved in NIfTI or NumPy archive formats for reproducibility. The software was developed so that personnel without a programming background could use it for their analyses, thus widening its usability across clinical and research settings.
 
-
----
-
-## Features
-
-- Supports Philips PAR/REC and NIfTI file formats
-- Manual and semi-automatic (region-growing) ROI delineation
-- Blood flow quantification (ml/min), mean velocity (cm/s), and cross-sectional area (mm²)
-- Pulsatility analysis (PI and ΔV) for cardiac-gated acquisitions
-- Export to CSV, NIfTI, NPZ, and animated GIF
-
 ---
 
 ## Installation
